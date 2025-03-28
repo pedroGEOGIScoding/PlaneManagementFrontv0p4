@@ -1,9 +1,7 @@
 import { AppBar, Box, Button, Drawer, IconButton, Toolbar, Typography, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Divider } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import { useState, useContext } from 'react';
-import { Home, Flight, Map, Info, ConnectingAirports, FlightLand, Brightness4, Brightness7 } from "@mui/icons-material";
-import { ColorModeContext } from '../context/ThemeContext';
-import { useTheme } from '@mui/material';
+import { Home, Flight, Map, Info, ConnectingAirports, FlightLand } from "@mui/icons-material";
 
 const navLinks = [
   { title: 'Home', path: '/',icon: <Home/> },
@@ -16,16 +14,13 @@ const navLinks = [
 
 export default function Navbar () {
   const [drawerOpen, toggleDrawer] = useState(false);
-  const theme = useTheme();
-  const colorMode = useContext(ColorModeContext);
-
   const handleMenuClick = (event) => {
     toggleDrawer(true);
     event.currentTarget.blur();
   };
   return (
     <>
-      <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+      <AppBar position="fixed" sx={{ zIndex: 1201 }}>
 
         <Toolbar>
 
@@ -73,13 +68,7 @@ export default function Navbar () {
                 ))}
           </Box>
 
-          <IconButton
-            color="inherit"
-            onClick={colorMode.toggleColorMode}
-            sx={{ ml: 2 }}
-          >
-            {theme.palette.mode === 'dark' ? <Brightness7 /> : <Brightness4 />}
-          </IconButton>
+
 
         </Toolbar>
 

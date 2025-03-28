@@ -1,11 +1,11 @@
 .mapContainer {
     position: fixed;
-    top: 64px; /* AppBar height */
+    top: 56px; /* AppBar height */
     left: 0;
     right: 0;
     bottom: 0;
     width: 100%;
-    height: calc(100vh - 64px);
+    height: calc(100vh - 56px);
 }
 
 .map {
@@ -34,4 +34,18 @@
 :global(.leaflet-container) {
     height: 100%;
     width: 100%;
+}
+
+:global(.leaflet-popup-content) {
+    margin: 8px;
+    font-size: 12px;
+    line-height: 1;
+}
+
+:global(.leaflet-popup-content p) {
+    margin: 6px 0;
+}
+
+:global(.leaflet-popup) {
+    max-width: 240px;
 }

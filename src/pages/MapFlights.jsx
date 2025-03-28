@@ -1,48 +1,54 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { MapContainer, TileLayer, Marker, Popup, LayersControl, ZoomControl } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup, LayersControl, ZoomControl, useMap } from 'react-leaflet'
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import {Box} from '@mui/material';
 import 'leaflet-moving-rotated-marker';
 import styles from './MapFlights.module.css';
 import planeIconImage from '../assets/plane.png';
 
 // Custom control for flight filters
-const FlightFilters = ({ altitudeRange, setAltitudeRange, region, setRegion }) => {
-    const altitudeRanges = [
-        { label: 'All Altitudes', value: 'all' },
-        { label: '0-1,500 m', value: '0-4921.26' },
-        { label: '1,500-3,000 m', value: '4921.26-9842.52' },
-        { label: '3,000-6,000 m', value: '9842.52-19685.04' },
-        { label: 'Above 6,000 m', value: '19685.04+' }
-    ];
+// Helper function to parse bounds string into LatLngBounds
+const parseBounds = (boundsStr) => {
+    if (boundsStr === 'all') return null;
+    const [north, south, west, east] = boundsStr.split(',').map(Number);
+    return [[north, west], [south, east]];
+};
 
+// Component to handle map bounds updates
+const MapBoundsHandler = ({ bounds }) => {
+    const map = useMap();
+    
+    useEffect(() => {
+        if (bounds) {
+            map.fitBounds(bounds, {
+                padding: [50, 50], // Add padding around bounds
+                maxZoom: 6 // Limit maximum zoom level
+            });
+        } else {
+            // Default view for 'All Regions'
+            map.setView([45.00, 2.00], 5);
+        }
+    }, [bounds, map]);
+
+    return null;
+};
+
+const FlightFilters = ({ region, setRegion }) => {
     const regions = [
-        { label: 'All Regions', value: 'all' },
-        { label: 'Europe', bounds: '72.00,20.00,35.00,40.00' },
-        { label: 'North America', bounds: '72.00,-168.00,15.00,-50.00' },
-        { label: 'South America', bounds: '15.00,-82.00,-56.00,-33.00' },
-        { label: 'Africa', bounds: '38.00,-18.00,-35.00,52.00' },
-        { label: 'Middle East', bounds: '42.00,32.00,12.00,65.00' },
-        { label: 'Asia', bounds: '82.00,65.00,10.00,180.00' },
-        { label: 'Australasia', bounds: '0.00,100.00,-50.00,180.00' }
+        { label: 'All Regions', bounds: '90.00,-90.00,-180.00,180.00' },
+        { label: 'Europe', bounds: '60.00,35.00,-10.00,30.00' },
+        { label: 'North America', bounds: '72.00,15.00,-168.00,-50.00' },
+        { label: 'South America', bounds: '15.00,-56.00,-82.00,-33.00' },
+        { label: 'Africa', bounds: '38.00,-35.00,-18.00,52.00' },
+        { label: 'Middle East', bounds: '42.00,12.00,32.00,65.00' },
+        { label: 'Asia', bounds: '65.00,10.00,60.00,150.00' },
+        { label: 'Australasia', bounds: '0.00,-50.00,100.00,180.00' }
     ];
 
     return (
-        // Flight Filters      
         <div className="leaflet-control leaflet-bar" style={{ marginTop: '30px', backgroundColor: 'white', padding: '8px', margin: '1px' }}>
-            <div style={{ marginBottom: '8px' }}>
-                <label style={{ display: 'block', marginBottom: '5px' }}>Altitude Range:</label>
-                <select 
-                    value={altitudeRange} 
-                    onChange={(e) => setAltitudeRange(e.target.value)}
-                    style={{ width: '100%', padding: '4px' }}
-                >
-                    {altitudeRanges.map(range => (
-                        <option key={range.value} value={range.value}>{range.label}</option>
-                    ))}
-                </select>
-            </div>
             <div>
                 <label style={{ display: 'block', marginBottom: '5px' }}>Region:</label>
                 <select 
@@ -63,7 +69,7 @@ const MapFlights = () => {
     const [flights, setFlights] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [altitudeRange, setAltitudeRange] = useState('all');
+
     const [region, setRegion] = useState('all');
 
     const fetchFlights = async () => {
@@ -85,7 +91,7 @@ const MapFlights = () => {
 
         // Define any query parameters, if needed (optional)
         const params = {
-            'bounds': region === 'all' ? '90.00,-180.00,-90.00,180.00' : region,
+            'bounds': region === 'all' ? '90.00,-90.00,-180.00,180.00' : region,
             'categories': 'P'
         };
 
@@ -129,7 +135,16 @@ const MapFlights = () => {
     };
 
     useEffect(() => {
+        // Initial fetch
         fetchFlights();
+
+        // Set up interval for fetching every 5 minutes
+        const interval = setInterval(() => {
+            fetchFlights();
+        }, 5 * 60 * 1000); // 5 minutes in milliseconds
+
+        // Cleanup interval on component unmount
+        return () => clearInterval(interval);
     }, []);
 
     // Create custom icon for plane markers
@@ -140,7 +155,23 @@ const MapFlights = () => {
     });
 
     return (
-        <div className={styles.mapContainer}>
+        <Box className={styles.mapContainer}>
+            <Box
+            sx={{
+                display: { xs: 'none' , sm: 'block' },
+                position: 'absolute',
+                top: '10px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                zIndex: 1000,
+                backgroundColor: 'white',
+                opacity: 0.5,
+                padding: '5px 15px',
+                borderRadius: '4px',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+            }}>
+                <h2 style={{ margin: 0, fontWeight: 'bold' }}>Real-Time Flight Map</h2>
+            </Box>
             {loading && (
                 <div className={styles.overlay}>
                     <p>Loading flights...</p>
@@ -151,13 +182,14 @@ const MapFlights = () => {
                     <p className={styles.error}>Error: {error}</p>
                 </div>
             )}
-            <MapContainer 
+            <MapContainer
                 center={[45.00, 2.00]} 
                 zoom={5} 
                 className={styles.map}
                 zoomControl={false}
                 attributionControl={false}
             >
+                <MapBoundsHandler bounds={parseBounds(region)} />
                 <ZoomControl position="topleft" />
                 <LayersControl position="topleft">
                     <LayersControl.BaseLayer checked name="Satellite">
@@ -178,27 +210,17 @@ const MapFlights = () => {
                             url="https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}"
                         />
                     </LayersControl.BaseLayer>
+                    {/* //Flight Filter Box */}
                 </LayersControl>
-                <div className="leaflet-top leaflet-left" style={{ marginTop: '140px', marginLeft: '10px', zIndex: 1000 }}>
+                <div className="leaflet-top leaflet-left" style={{ marginTop: '9px', marginLeft: '60px', zIndex: 1000 }}>
                     <FlightFilters 
-                        altitudeRange={altitudeRange}
-                        setAltitudeRange={setAltitudeRange}
                         region={region}
                         setRegion={setRegion}
                     />
                 </div>
                 {flights && flights.map((flight) => {
-                    // Log the structure of each flight object
-                    console.log('Processing flight:', flight);
-                    // Filter by altitude
-                    const altitudeMatch = altitudeRange === 'all' ||
-                        (altitudeRange === '0-4921.26' && flight.alt <= 1500) ||
-                        (altitudeRange === '4921.26-9842.52' && flight.alt > 1500 && flight.alt <= 3000) ||
-                        (altitudeRange === '9842.52-19685.04' && flight.alt > 3000 && flight.alt <= 6000) ||
-                        (altitudeRange === '19685.04+' && flight.alt > 6000);
 
-                    if (flight.lat && flight.lon && altitudeMatch) {
-                      
+                    if (flight.lat && flight.lon) {                     
                         return (
                             <Marker
                                 key={flight.callsign}
@@ -207,29 +229,33 @@ const MapFlights = () => {
                                 rotationAngle={flight.track}
                                 rotationOrigin="center"
                             >
-                                <Popup>
+                                <Popup className="leaflet-popup" style={{ width: '20px' }}>
                                     <div>
-                                        <h3>Flight: {flight.flight}</h3>
-                                        <p>Flight: {flight.type}</p>
+                                        <h3>Flight number: {flight.flight}</h3>
+                                        <p>Aircraft type: {flight.type}</p>
                                         <p>From: {flight.orig_iata}</p>
                                         <p>To: {flight.dest_iata}</p>
-                                        <p>ETA: {flight.eta}</p>
+                                        <p>Arrival time: {new Date(flight.eta).toLocaleString('en-GB', {
+                                            dateStyle: 'medium',
+                                            timeStyle: 'short'
+                                        })}</p>
                                         <p>Latitude: {flight.lat.toFixed(2)}°</p>
                                         <p>Longitude: {flight.lon.toFixed(2)}°</p>
                                         <p>Direction: {flight.track}°</p>
                                         <p>Altitude: {(flight.alt * 0.3048).toFixed(2)} m</p>
                                         <p>Ground Speed: {(flight.gspeed * 1.852).toFixed(2)} km/h</p>
-                                        <p>Vertical Speed: {(flight.vspeed / 196.9).toFixed(2)} m/s</p>
-                                        
+                                        <p style={{ color: flight.vspeed > 0 ? 'blue' : flight.vspeed < 0 ? 'green' : 'blue'}}>
+                                        Vertical Speed: {(flight.vspeed / 196.9).toFixed(2)} m/s 
+                                       {(flight.vspeed > 0 ? " (ascending)" : flight.vspeed < 0 ? " (descending)" : " (cruising)")}</p>                                
                                     </div>
                                 </Popup>
                             </Marker>
                         );
                     }
-                    return null;
+                    return;
                 })}
             </MapContainer>
-        </div>
+        </Box>
     );
 }
 export default MapFlights;
