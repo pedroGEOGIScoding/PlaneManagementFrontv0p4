@@ -1,0 +1,37 @@
+.mapContainer {
+    position: fixed;
+    top: 64px; /* AppBar height */
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: calc(100vh - 64px);
+}
+
+.map {
+    height: 100%;
+    width: 100%;
+}
+
+.overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.error {
+    color: #d32f2f;
+    margin: 0;
+}
+
+/* Override Leaflet's default styles */
+:global(.leaflet-container) {
+    height: 100%;
+    width: 100%;
+}
