@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import axios from 'axios'
 import { MapContainer, TileLayer, Marker, Popup, LayersControl, ZoomControl, useMap } from 'react-leaflet'
 import L from 'leaflet';
@@ -35,7 +35,19 @@ const MapBoundsHandler = ({ bounds }) => {
     return null;
 };
 
-const FlightFilters = ({ region, setRegion }) => {
+const altitudeRanges = [
+    { label: 'All Altitudes', min: null, max: null },
+    { label: '0-500m', min: 0, max: 500 },
+    { label: '500-1000m', min: 500, max: 1000 },
+    { label: '1000-2000m', min: 1000, max: 2000 },
+    { label: '2000-4000m', min: 2000, max: 4000 },
+    { label: '4000-6000m', min: 4000, max: 6000 },
+    { label: '6000-10000m', min: 6000, max: 10000 },
+    { label: '10000-12000m', min: 10000, max: 12000 },
+    { label: 'Above 12000m', min: 12000, max: Infinity }
+];
+
+const FlightFilters = ({ region, setRegion, altitudeRange, setAltitudeRange }) => {
     const regions = [
         { label: 'All Regions', bounds: '90.00,-90.00,-180.00,180.00' },
         { label: 'Europe', bounds: '60.00,35.00,-10.00,30.00' },
@@ -48,8 +60,8 @@ const FlightFilters = ({ region, setRegion }) => {
     ];
 
     return (
-        <div className="leaflet-control leaflet-bar" style={{ marginTop: '30px', backgroundColor: 'white', padding: '8px', margin: '1px' }}>
-            <div>
+        <div className="leaflet-control leaflet-bar" style={{ marginTop: '30px', backgroundColor: 'white', padding: '8px', margin: '1px', minWidth: '200px' }}>
+            <div style={{ marginBottom: '10px' }}>
                 <label style={{ display: 'block', marginBottom: '5px' }}>Region:</label>
                 <select 
                     value={region} 
@@ -58,6 +70,23 @@ const FlightFilters = ({ region, setRegion }) => {
                 >
                     {regions.map(region => (
                         <option key={region.label} value={region.bounds}>{region.label}</option>
+                    ))}
+                </select>
+            </div>
+            <div>
+                <label style={{ display: 'block', marginBottom: '5px' }}>Altitude Range:</label>
+                <select
+                    value={JSON.stringify({ min: altitudeRange.min, max: altitudeRange.max })}
+                    onChange={(e) => setAltitudeRange(JSON.parse(e.target.value))}
+                    style={{ width: '100%', padding: '4px' }}
+                >
+                    {altitudeRanges.map(range => (
+                        <option 
+                            key={range.label} 
+                            value={JSON.stringify({ min: range.min, max: range.max })}
+                        >
+                            {range.label}
+                        </option>
                     ))}
                 </select>
             </div>
@@ -70,55 +99,67 @@ const MapFlights = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const [region, setRegion] = useState('all');
+    const [region, setRegion] = useState('60.00,35.00,-10.00,30.00'); // Default to Europe
+    const [altitudeRange, setAltitudeRange] = useState({ min: null, max: null }); // Default to all altitudes
 
-    const fetchFlights = async () => {
+    const fetchFlights = useCallback(async () => {
         setLoading(true);
         setError(null);
-        const Sandbox = '9e8603f0-cc8f-4ae4-a85c-4de663ebb728|bBbbVbHb5mMuyTZiFYkxwNXTZMOax57I5mpYiK5Ob9e62f74'
-        const BASE_URL = 'https://fr24api.flightradar24.com/api'
-        const ENDPOINT = '/live/flight-positions/full'
-
-        // Construct the full URL    
-        const url = `${BASE_URL}${ENDPOINT}`
-
-        // Define the headers, including the Authorization header with your API token
-        const headers = {
-            'Accept': 'application/json',
-            'Authorization': `Bearer ${Sandbox}`,
-            'Accept-Version': 'v1'
+        
+        // Prevent 'all' region to avoid overwhelming the API
+        if (region === 'all') {
+            setError('Please select a specific region to view flights');
+            setLoading(false);
+            return;
         }
 
-        // Define any query parameters, if needed (optional)
-        const params = {
-            'bounds': region === 'all' ? '90.00,-90.00,-180.00,180.00' : region,
-            'categories': 'P'
-        };
+        const [lamin, lamax, lomin, lomax] = region.split(',').map(Number);
 
         try {
-            const response = await axios.get(url, { headers, params });
-            console.log('Raw Response Data:', JSON.stringify(response.data, null, 2));
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
 
-            let flightData = [];
-            const data = response.data;
+            const response = await axios.get('https://opensky-network.org/api/states/all', {
+                params: {
+                    lamin: Math.min(lamin, lamax),
+                    lamax: Math.max(lamin, lamax),
+                    lomin: Math.min(lomin, lomax),
+                    lomax: Math.max(lomin, lomax)
+                },
+                signal: controller.signal
+            });
 
-            // Try to extract flight data based on different possible structures
-            if (Array.isArray(data)) {
-                console.log('Response is an array');
-                flightData = data;
-            } else if (typeof data === 'object') {
-                console.log('Response is an object with keys:', Object.keys(data));
-                if (data.flights) {
-                    flightData = data.flights;
-                } else if (data.data) {
-                    flightData = data.data;
-                }
-            }
+            clearTimeout(timeoutId);
 
-            console.log('Extracted flight data:', flightData);
+            if (response.data && Array.isArray(response.data.states)) {
+                // Filter out invalid or incomplete data
+                const flightData = response.data.states
+                    .filter(state => 
+                        state && 
+                        state[5] && state[6] && // Has valid coordinates
+                        !isNaN(state[5]) && !isNaN(state[6]) && // Coordinates are numbers
+                        state[5] >= -180 && state[5] <= 180 && // Valid longitude
+                        state[6] >= -90 && state[6] <= 90 && // Valid latitude
+                        // Apply baroAlt filter if set
+                        (!altitudeRange.min || (state[7] && state[7] >= altitudeRange.min)) &&
+                        (!altitudeRange.max || (state[7] && state[7] <= altitudeRange.max))
+                    )
+                    .map(state => ({
+                        id: state[0] || 'unknown', // icao24
+                        callsign: state[1]?.trim() || 'N/A',
+                        origin_country: state[2]|| 'N/A',
+                        latitude: Number(state[6]),
+                        longitude: Number(state[5]),
+                        baroAlt: Math.round(state[7] || 0),
+                        geomAlt: Math.round(state[13] || 0),
+                        true_track: Number(state[10] || 0),
+                        velocity: Math.round((state[9] || 0) * 3.6), // Convert m/s to km/h
+                        verticalRate: Math.round(state[11] || 0),
+                        onGround: Boolean(state[8]),
+                        lastContact: state[4]
+                    }));
 
-            if (flightData.length > 0) {
-                console.log('Sample flight object:', flightData[0]);
+                console.log(`Fetched ${flightData.length} valid flights`);
                 setFlights(flightData);
             } else {
                 console.error('No valid flight data found in response');
@@ -132,20 +173,29 @@ const MapFlights = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [region, altitudeRange]);
 
     useEffect(() => {
-        // Initial fetch
-        fetchFlights();
+        let isMounted = true;
+        
+        const fetchData = async () => {
+            if (isMounted) {
+                await fetchFlights();
+            }
+        };
 
-        // Set up interval for fetching every 5 minutes
-        const interval = setInterval(() => {
-            fetchFlights();
-        }, 5 * 60 * 1000); // 5 minutes in milliseconds
+        fetchData();
 
-        // Cleanup interval on component unmount
-        return () => clearInterval(interval);
-    }, []);
+        // Set up interval for fetching every 2 minutes
+        const interval = setInterval(fetchData, 120000); // 2 minutes in milliseconds
+
+        // Cleanup on component unmount
+        return () => {
+            isMounted = false;
+            clearInterval(interval);
+        };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [region, altitudeRange, fetchFlights]); // Re-run effect when region or baroAlt range changes
 
     // Create custom icon for plane markers
     const planeIcon = L.icon({
@@ -216,37 +266,36 @@ const MapFlights = () => {
                     <FlightFilters 
                         region={region}
                         setRegion={setRegion}
+                        altitudeRange={altitudeRange}
+                        setAltitudeRange={setAltitudeRange}
                     />
                 </div>
                 {flights && flights.map((flight) => {
-
-                    if (flight.lat && flight.lon) {                     
+                    if (flight.latitude && flight.longitude) {                     
                         return (
                             <Marker
-                                key={flight.callsign}
-                                position={[flight.lat, flight.lon]}
+                                key={flight.id}
+                                position={[flight.latitude, flight.longitude]}
                                 icon={planeIcon}
-                                rotationAngle={flight.track}
+                                rotationAngle={flight.true_track}
                                 rotationOrigin="center"
                             >
                                 <Popup className="leaflet-popup" style={{ width: '20px' }}>
                                     <div>
-                                        <h3>Flight number: {flight.flight}</h3>
-                                        <p>Aircraft type: {flight.type}</p>
-                                        <p>From: {flight.orig_iata}</p>
-                                        <p>To: {flight.dest_iata}</p>
-                                        <p>Arrival time: {new Date(flight.eta).toLocaleString('en-GB', {
-                                            dateStyle: 'medium',
-                                            timeStyle: 'short'
-                                        })}</p>
-                                        <p>Latitude: {flight.lat.toFixed(2)}°</p>
-                                        <p>Longitude: {flight.lon.toFixed(2)}°</p>
-                                        <p>Direction: {flight.track}°</p>
-                                        <p>Altitude: {(flight.alt * 0.3048).toFixed(2)} m</p>
-                                        <p>Ground Speed: {(flight.gspeed * 1.852).toFixed(2)} km/h</p>
-                                        <p style={{ color: flight.vspeed > 0 ? 'blue' : flight.vspeed < 0 ? 'green' : 'blue'}}>
-                                        Vertical Speed: {(flight.vspeed / 196.9).toFixed(2)} m/s 
-                                       {(flight.vspeed > 0 ? " (ascending)" : flight.vspeed < 0 ? " (descending)" : " (cruising)")}</p>                                
+                                        <h3>Flight number: {flight.callsign}</h3>
+                                        <p>From: {flight.origin_country}</p>
+                                        <p>Latitude: {flight.latitude.toFixed(4)}°</p>
+                                        <p>Longitude: {flight.longitude.toFixed(4)}°</p>
+                                        <p>Direction: {flight.true_track.toFixed(1)}°</p>
+                                        <p>Barometric Altitude: {flight.baroAlt} m</p>
+                                        <p>Geometric Altitude: {flight.geomAlt} m</p>
+                                        <p>Ground Speed: {flight.velocity} km/h</p>
+                                        <p style={{ color: flight.verticalRate > 0 ? 'blue' : flight.verticalRate < 0 ? 'green' : 'black'}}>
+                                            Vertical Rate: {flight.verticalRate ? flight.verticalRate.toFixed(2) : '0'} m/s
+                                            {(flight.verticalRate > 0 ? " (ascending)" : flight.verticalRate < 0 ? " (descending)" : " (cruising)")}
+                                        </p>
+                                        <p>Status: {flight.onGround ? 'On Ground' : 'In Air'}</p>
+                                        <p>Last Contact: {new Date(flight.lastContact * 1000).toLocaleString()}</p>
                                     </div>
                                 </Popup>
                             </Marker>
