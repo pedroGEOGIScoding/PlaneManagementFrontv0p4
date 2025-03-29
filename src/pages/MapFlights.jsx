@@ -43,8 +43,8 @@ const FlightFilters = ({ region, setRegion }) => {
         { label: 'South America', bounds: '15.00,-56.00,-82.00,-33.00' },
         { label: 'Africa', bounds: '38.00,-35.00,-18.00,52.00' },
         { label: 'Middle East', bounds: '42.00,12.00,32.00,65.00' },
-        { label: 'Asia', bounds: '65.00,10.00,60.00,150.00' },
-        { label: 'Australasia', bounds: '0.00,-50.00,100.00,180.00' }
+        { label: 'Asia', bounds: '70.00,10.00,80.00,120.00' },
+        { label: 'Australasia', bounds: '-1.00,-45.00,100.00,180.00' }
     ];
 
     return (
