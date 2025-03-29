@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { MapContainer, TileLayer, Marker, Popup, LayersControl, ZoomControl, useMap } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup, LayersControl, ZoomControl, useMap, useMapEvents } from 'react-leaflet'
+import { Control } from 'leaflet'
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import {Box} from '@mui/material';
@@ -158,19 +159,22 @@ const MapFlights = () => {
         <Box className={styles.mapContainer}>
             <Box
             sx={{
-                display: { xs: 'none' , sm: 'block' },
-                position: 'absolute',
-                top: '10px',
+                display: { xs: 'none', sm: 'none', md: 'block' },
+                position: 'fixed',
+                top: '66px',
                 left: '50%',
                 transform: 'translateX(-50%)',
-                zIndex: 1000,
-                backgroundColor: 'white',
+                zIndex: 9999,
+                backgroundColor: '#ffffff',
                 opacity: 0.5,
-                padding: '5px 15px',
+                padding: '2px 10px',
                 borderRadius: '4px',
-                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
+                border: '1px solid #e0e0e0',
+                height: 'min-content',
+                lineHeight: 1
             }}>
-                <h2 style={{ margin: 0, fontWeight: 'bold' }}>Real-Time Flight Map</h2>
+                <h2 style = {{ fontWeight: 'bold', color: '#000000', margin: '2px 0' }}>Real-Time Flight Map</h2>
             </Box>
             {loading && (
                 <div className={styles.overlay}>
