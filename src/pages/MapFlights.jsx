@@ -60,7 +60,7 @@ const FlightFilters = ({ region, setRegion, altitudeRange, setAltitudeRange }) =
     ];
 
     return (
-        <div className="leaflet-control leaflet-bar" style={{ marginTop: '30px', backgroundColor: 'white', padding: '8px', margin: '1px', minWidth: '200px' }}>
+        <div className="leaflet-control leaflet-bar" style={{ marginTop: '170px', marginLeft: '-48px', backgroundColor: 'white', padding: '8px', minWidth: '200px' }}>
             <div style={{ marginBottom: '10px' }}>
                 <label style={{ display: 'block', marginBottom: '5px' }}>Region:</label>
                 <select 
