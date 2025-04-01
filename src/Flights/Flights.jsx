@@ -1,3 +1,4 @@
+
 import React from 'react'
 
 function Flights() {
@@ -6,4 +7,4 @@ function Flights() {
   )
 }
 
-export default Flights;
+export default Flights
