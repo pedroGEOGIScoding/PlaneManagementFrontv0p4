@@ -81,6 +81,7 @@ const Airports = () => {
                 <TableCell>Name</TableCell>
                 <TableCell>City</TableCell>
                 <TableCell>Country</TableCell>
+                <TableCell>Elevation</TableCell>
                 <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
