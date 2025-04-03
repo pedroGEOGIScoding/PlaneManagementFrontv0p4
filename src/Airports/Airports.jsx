@@ -1,5 +1,6 @@
 import {
   Button,
+  Container,
   Paper,
   Table,
   TableBody,
@@ -9,23 +10,33 @@ import {
   TableRow,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "../middleware/api";
 import CreateNewAirportForm from "./CreateNewAirportForm.jsx";
 import DetailAirport from "./DetailAirport.jsx";
 import UpdateAirportForm from "./UpdateAirportForm.jsx";
 
 const Airports = () => {
+  console.log('Airports component mounted');
   const [airports, setAirports] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
   
   // Fetch airports
   const fetchAirports = async () => {
     try {
+      setLoading(true);
+      setError(null);
+      console.log('Fetching airports...');
       const response = await axios.get("/airports");
+      console.log('Airports response:', response.data);
       setAirports(response.data);
     } catch (error) {
       console.error("Error fetching airports:", error);
+      setError(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -34,7 +45,7 @@ const Airports = () => {
       await axios.delete(`/airports/${id}`);
       setAirports(airports.filter((airport) => airport.id !== id));
       alert("Airport deleted successfully");
-      navigate('/Airports');
+      navigate('/airports');
     } catch (error) {
       console.error("Error deleting airport:", error);
       if (error.response && error.response.status === 404) {
@@ -46,30 +57,33 @@ const Airports = () => {
   };
 
   const updateAirport = (airport) => {
-    navigate(`/updateAirport/${airport.id}`, { state: { airport } });
+    navigate(`/airports/update/${airport.id}`, { state: { airport } });
   };
   
   const createNewAirport = () => {
-    navigate('/createNewAirport');
+    navigate('/airports/create');
   };
   
   const detailAirport = (airport) => {
-    navigate(`/detailAirport/${airport.id}`, { state: { airport } });
+    navigate(`/airports/details/${airport.id}`, { state: { airport } });
   };
 
   useEffect(() => {
+    console.log('Airports useEffect running');
     fetchAirports();
   }, []);
   
     return (
-      <Container>
+      <>
         <h1>Airports</h1>
+        {loading && <p>Loading airports...</p>}
+        {error && <p style={{color: 'red'}}>Error: {error}</p>}
 
         <Button 
           variant="contained"
           color="primary"
           onClick={createNewAirport}
-          sx={{ marginBottom: 16 }}
+          sx={{ marginBottom: 2 }}
         >
           Create New Airport
         </Button>
@@ -102,10 +116,11 @@ const Airports = () => {
             </TableBody>
           </Table>
         </TableContainer>
-      </Container>
+      </>
     );
   };
   
+  export default Airports;
   
     
   
