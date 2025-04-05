@@ -1,13 +1,14 @@
 import Home from './pages/Home.jsx';
 import Navbar from './components/Navbar.jsx';
 import Flights from './Flights/Flights.jsx';
-/* import DetailFlight from './Flights/DetailFlight.jsx';
-import UpdateFlightForm from './Flights/UpdateFlightForm.jsx'; */
+import CreateNewFlightForm from './Flights/CreateNewFlightForm.jsx';
+import DetailFlight from './Flights/DetailFlight.jsx';
+import UpdateFlightForm from './Flights/UpdateFlightForm.jsx';
 import MapFlights from './pages/MapFlights.jsx';
 import Planes from './Planes/Planes.jsx';
-/* import CreateNewPlane from './Planes/CreateNewPlane.jsx';
+import CreateNewPlane from './Planes/CreateNewPlane.jsx';
 import DetailPlane from './Planes/DetailPlane.jsx';
-import UpdatePlaneForm from './Planes/UpdatePlaneForm.jsx'; */
+import UpdatePlaneForm from './Planes/UpdatePlaneForm.jsx';
 import Airports from './Airports/Airports.jsx';
 import CreateNewAirportForm from './Airports/CreateNewAirportForm.jsx';
 import UpdateAirportForm from './Airports/UpdateAirportForm.jsx';
@@ -29,15 +30,15 @@ export default function App() {
           <Route path="/planes" element={<Planes />} />
           <Route path="/airports" element={<Airports />} />
           <Route path="/about" element={<About />} />
-          {/* <Route path="/createNewPlane" element={<CreateNewPlane />} />
-          <Route path="/detailPlane/:id" element={<DetailPlane />} />
-          <Route path="/updatePlane/:id" element={<UpdatePlaneForm />} /> */}
+          <Route path="/planes/create" element={<CreateNewPlane />} />
+          <Route path="/planes/detail/:id" element={<DetailPlane />} />
+          <Route path="/planes/update/:id" element={<UpdatePlaneForm />} />
           <Route path="/airports/create" element={<CreateNewAirportForm />} />
-          <Route path="/airports/details/:id" element={<DetailAirport />} />
+          <Route path="/airports/detail/:id" element={<DetailAirport />} />
           <Route path="/airports/update/:id" element={<UpdateAirportForm />} />
-          {/* <Route path="/createNewFlight" element={<CreateNewFlightForm />} />
-          <Route path="/detailFlight/:id" element={<DetailFlight />} />
-          <Route path="/updateFlight/:id" element={<UpdateFlightForm />} /> */}
+          <Route path="/flights/create" element={<CreateNewFlightForm />} />
+          <Route path="/flights/detail/:id" element={<DetailFlight />} />
+          <Route path="/flights/update/:id" element={<UpdateFlightForm />} />
         </Routes>
       </Container>
     </>

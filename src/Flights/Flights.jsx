@@ -7,4 +7,4 @@ function Flights() {
   )
 }
 
-export default Flights
+export default Flights;
