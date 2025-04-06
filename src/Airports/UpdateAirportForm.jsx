@@ -6,4 +6,4 @@ function UpdateAirportForm() {
   )
 }
 
-export default UpdateAirportForm
+export default UpdateAirportForm;

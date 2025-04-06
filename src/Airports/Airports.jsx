@@ -13,7 +13,6 @@ import { useNavigate } from "react-router-dom";
 import axios from "../middleware/api";
 
 const Airports = () => {
-  console.log('Airports component mounted');
   const [airports, setAirports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -61,7 +60,7 @@ const Airports = () => {
   };
   
   const detailAirport = (airport) => {
-    navigate(`/airports/details/${airport.id}`, { state: { airport } });
+    navigate(`/airports/detail/${airport.id}`, { state: { airport } });
   };
 
   useEffect(() => {

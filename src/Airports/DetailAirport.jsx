@@ -6,4 +6,4 @@ function DetailAirport() {
   )
 }
 
-export default DetailAirport
+export default DetailAirport;

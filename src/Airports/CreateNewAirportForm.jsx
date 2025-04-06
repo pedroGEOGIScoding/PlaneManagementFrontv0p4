@@ -6,4 +6,4 @@ function CreateNewAirportForm() {
   )
 }
 
-export default CreateNewAirportForm
+export default CreateNewAirportForm;
