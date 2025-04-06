@@ -10,63 +10,58 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "../middleware/api";
+import { useAppService } from "../middleware/appServicesContext";
 
 const Airports = () => {
+  const appService = useAppService();
   const [airports, setAirports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   
-  // Fetch airports
-  const fetchAirports = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      console.log('Fetching airports...');
-      const response = await axios.get("/airports");
-      console.log('Airports response:', response.data);
-      setAirports(response.data);
-    } catch (error) {
-      console.error("Error fetching airports:", error);
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const deleteAirport = async (id) => {
-    try {
-      await axios.delete(`/airports/${id}`);
-      setAirports(airports.filter((airport) => airport.id !== id));
-      alert("Airport deleted successfully");
-      navigate('/airports');
-    } catch (error) {
-      console.error("Error deleting airport:", error);
-      if (error.response && error.response.status === 404) {
-        alert("Airport not found");
-      }else{
-        alert("Error deleting airport");
+  useEffect(() => {
+    async function fetchAirports() {
+      try {
+        const data = await appService.airport.getAllAirports();
+        setAirports(data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching airports:', error);
+        setError(error.message);
+        setLoading(false);
       }
     }
-  };
 
-  const updateAirport = (airport) => {
-    navigate(`/airports/update/${airport.id}`, { state: { airport } });
-  };
-  
+    fetchAirports();
+  }, [appService]);
+
   const createNewAirport = () => {
     navigate('/airports/create');
   };
-  
+
   const detailAirport = (airport) => {
-    navigate(`/airports/detail/${airport.id}`, { state: { airport } });
+    navigate(`/airports/detail/${airport.id}`);
   };
 
-  useEffect(() => {
-    console.log('Airports useEffect running');
-    fetchAirports();
-  }, []);
+  const updateAirport = (airport) => {
+    navigate(`/airports/update/${airport.id}`);
+  };
+
+  const deleteAirport = async (id) => {
+    try{
+      await appService.airport.deleteAirport(id);
+      setAirports(airports.filter((airport) => airport.id !== id));
+      alert('Airport deleted successfully');
+      navigate('/airports');
+    } catch (error) {
+      console.error('Error deleting airport:', error);
+      if (error.response && error.response.data && error.response.data.message) {
+        setError(error.response.data.message);
+      } else {
+        setError('Failed to delete airport');
+      }
+    }
+  };
   
     return (
       <>
