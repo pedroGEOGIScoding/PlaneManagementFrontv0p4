@@ -1,6 +1,5 @@
 import {
   Button,
-  Container,
   Paper,
   Table,
   TableBody,
@@ -12,9 +11,6 @@ import {
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../middleware/api";
-import CreateNewAirportForm from "./CreateNewAirportForm.jsx";
-import DetailAirport from "./DetailAirport.jsx";
-import UpdateAirportForm from "./UpdateAirportForm.jsx";
 
 const Airports = () => {
   console.log('Airports component mounted');
