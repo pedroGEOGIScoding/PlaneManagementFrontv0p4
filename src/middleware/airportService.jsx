@@ -1,10 +1,10 @@
-import axios from "axios";
+import instanceAxios from "./api";
 
 const airportService = {
 
   getAllAirports : async () => {
     try {
-      const response = await axios.get(`${"http://localhost:8080/api/v1"}/airports`);
+      const response = await instanceAxios.get(`/airports`);
       return response.data;
     } catch (error) {
       console.error("Error fetching airports", error);
@@ -14,7 +14,7 @@ const airportService = {
 
   createAirport : async (airport) => {
     try {
-      const response = await axios.post(`${"http://localhost:8080/api/v1"}/airports`, airport);
+      const response = await instanceAxios.post(`/airports`, airport);
       return response.data;
     } catch (error) {
       console.error("Error creating airport", error);
@@ -24,7 +24,7 @@ const airportService = {
 
   updateAirport : async (id, airport) => {
     try {
-      const response = await axios.put(`${"http://localhost:8080/api/v1"}/airports/${id}`, airport);
+      const response = await instanceAxios.put(`/airports/${id}`, airport);
       return response.data;
     } catch (error) {
       console.error("Error updating airport", error);
@@ -34,7 +34,7 @@ const airportService = {
 
   deleteAirport : async (id) => {
     try {
-      const response = await axios.delete(`${"http://localhost:8080/api/v1"}/airports/${id}`);
+      const response = await instanceAxios.delete(`/airports/${id}`);
       return response.data;
     } catch (error) {
       console.error("Error deleting airport", error);
@@ -44,7 +44,7 @@ const airportService = {
 
   getPaginatedAirports : async (currentPage) => {
     try {
-      const response = await axios.get(`${"http://localhost:8080/api/v1"}/airports?page=${currentPage}`);
+      const response = await instanceAxios.get(`/airports?page=${currentPage}`);
       return response.data;
     } catch (error) {
       console.error("Error fetching airports", error);

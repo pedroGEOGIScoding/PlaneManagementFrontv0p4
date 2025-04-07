@@ -57,11 +57,11 @@ const Airports = () => {
   };
 
   const detailAirport = (airport) => {
-    navigate(`/airports/detail/${airport.id}`);
+    navigate(`/airports/detail/${airport.id}`, { state: { airport } });
   };
 
   const updateAirport = (airport) => {
-    navigate(`/airports/update/${airport.id}`);
+    navigate(`/airports/update/${airport.id}`, { state: { airport } });
   };
   
     return (
