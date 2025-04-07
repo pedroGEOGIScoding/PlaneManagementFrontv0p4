@@ -10,16 +10,17 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppService } from "../middleware/appServicesContext";
+import { useAppServices } from "../middleware/appServicesContext";
 
 const Airports = () => {
-  const appService = useAppService();
+  const appService = useAppServices();
   const [airports, setAirports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   
   useEffect(() => {
+
     async function fetchAirports() {
       try {
         const data = await appService.airport.getAllAirports();
@@ -35,18 +36,6 @@ const Airports = () => {
     fetchAirports();
   }, [appService]);
 
-  const createNewAirport = () => {
-    navigate('/airports/create');
-  };
-
-  const detailAirport = (airport) => {
-    navigate(`/airports/detail/${airport.id}`);
-  };
-
-  const updateAirport = (airport) => {
-    navigate(`/airports/update/${airport.id}`);
-  };
-
   const deleteAirport = async (id) => {
     try{
       await appService.airport.deleteAirport(id);
@@ -61,6 +50,18 @@ const Airports = () => {
         setError('Failed to delete airport');
       }
     }
+  };
+
+  const createNewAirport = () => {
+    navigate('/airports/create');
+  };
+
+  const detailAirport = (airport) => {
+    navigate(`/airports/detail/${airport.id}`);
+  };
+
+  const updateAirport = (airport) => {
+    navigate(`/airports/update/${airport.id}`);
   };
   
     return (

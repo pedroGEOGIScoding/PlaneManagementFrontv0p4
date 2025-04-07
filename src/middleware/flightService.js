@@ -50,6 +50,16 @@ const flightService = {
       throw error;
     }
   },
+
+  getPaginatedFlights : async (currentPage) => {
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/flights?page=${currentPage}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching flights", error);
+      throw error;
+    }
+  },
 };
 
 export default flightService;

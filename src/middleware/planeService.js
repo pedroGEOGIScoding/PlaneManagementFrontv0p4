@@ -13,6 +13,16 @@ const planeService = {
     }
   },
 
+  getPaginatedPlanes : async (currentPage) => {
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/planes?page=${currentPage}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching planes", error);
+      throw error;
+    }
+  },
+
   createPlane: async (plane) => {
     try {
       const response = await axios.post(

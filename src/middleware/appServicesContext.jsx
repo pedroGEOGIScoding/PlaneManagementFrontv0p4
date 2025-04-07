@@ -1,9 +1,9 @@
 import React, { createContext, useContext } from "react";
-import Services from "./service";
+import Services from "./services";
 
 const AppServicesContext = createContext(Services);
 
-export const useAppService = () => {
+export const useAppServices = () => {
   return useContext(AppServicesContext);  
 };
 
