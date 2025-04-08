@@ -1,3 +1,6 @@
+//See this offical doc: https://axios-http.com/docs/req_config
+// Image in a subfolder [src/assets/AxiosInstance.png]
+
 import axios from "axios";
 
 const instanceAxios = axios.create({
