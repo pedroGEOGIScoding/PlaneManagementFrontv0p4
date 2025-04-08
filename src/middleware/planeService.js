@@ -1,11 +1,9 @@
-import axios from "axios";
+import instanceAxios from "./api";
 
 const planeService = {
   getAllPlanes: async () => {
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/planes`
-      )
+      const response = await instanceAxios.get(`/planes`);
       return response.data;
     } catch (error) {
       console.error("Error fetching planes:", error);
@@ -15,7 +13,7 @@ const planeService = {
 
   getPaginatedPlanes : async (currentPage) => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/planes?page=${currentPage}`);
+      const response = await instanceAxios.get(`/planes?page=${currentPage}`);
       return response.data;
     } catch (error) {
       console.error("Error fetching planes", error);
@@ -25,10 +23,7 @@ const planeService = {
 
   createPlane: async (plane) => {
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/planes`,
-        plane
-      );
+      const response = await instanceAxios.post(`/planes`, plane);
       return response.data;
     } catch (error) {
       console.error("Error creating plane:", error);
@@ -38,10 +33,7 @@ const planeService = {
 
   updatePlane: async (id, plane) => {
     try {
-      const response = await axios.put(
-        `${import.meta.env.VITE_API_BASE_URL}/planes/${id}`,
-        plane
-      );
+      const response = await instanceAxios.put(`/planes/${id}`, plane);
       return response.data;
     } catch (error) {
       console.error("Error updating plane:", error);
@@ -51,9 +43,7 @@ const planeService = {
 
   deletePlane: async (id) => {
     try {
-      const response = await axios.delete(
-        `${import.meta.env.VITE_API_BASE_URL}/planes/${id}`
-      );
+      const response = await instanceAxios.delete(`/planes/${id}`);
       return response.data;
     } catch (error) {
       console.error("Error deleting plane:", error);

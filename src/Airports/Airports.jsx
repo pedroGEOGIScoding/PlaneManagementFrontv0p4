@@ -66,7 +66,7 @@ const Airports = () => {
   
     return (
       <>
-        <h1>Airports</h1>
+        <h1 style={{ marginTop: '64px' }}>Airports</h1>
         {loading && <p>Loading airports...</p>}
         {error && <p style={{color: 'red'}}>Error: {error}</p>}
 

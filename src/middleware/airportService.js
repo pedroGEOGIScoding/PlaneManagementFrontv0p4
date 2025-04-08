@@ -42,7 +42,7 @@ const airportService = {
     }
   },
 
-  getPaginatedAirports : async (currentPage) => {
+  getPaginatedAirports : async (currentPage, pageSize = 10) => {  
     try {
       const response = await instanceAxios.get(`/airports?page=${currentPage}`);
       return response.data;

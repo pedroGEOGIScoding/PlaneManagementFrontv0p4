@@ -1,11 +1,9 @@
-import axios from "axios";
+import instanceAxios from "./api";
 
 const flightService = {
   getAllFlights: async () => {
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/flights`
-      )
+      const response = await instanceAxios.get(`/flights`);
       return response.data;
     } catch (error) {
       console.error("Error fetching flights:", error);
@@ -15,10 +13,7 @@ const flightService = {
 
   createFlight: async (flight) => {
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/flights`,
-        flight
-      );
+      const response = await instanceAxios.post(`/flights`, flight);
       return response.data;
     } catch (error) {
       console.error("Error creating flight:", error);
@@ -28,10 +23,7 @@ const flightService = {
 
   updateFlight: async (id, flight) => {
     try {
-      const response = await axios.put(
-        `${import.meta.env.VITE_API_BASE_URL}/flights/${id}`,
-        flight
-      );
+      const response = await instanceAxios.put(`/flights/${id}`, flight);
       return response.data;
     } catch (error) {
       console.error("Error updating flight:", error);
@@ -41,9 +33,7 @@ const flightService = {
 
   deleteFlight: async (id) => {
     try {
-      const response = await axios.delete(
-        `${import.meta.env.VITE_API_BASE_URL}/flights/${id}`
-      );
+      const response = await instanceAxios.delete(`/flights/${id}`);
       return response.data;
     } catch (error) {
       console.error("Error deleting flight:", error);
@@ -53,7 +43,7 @@ const flightService = {
 
   getPaginatedFlights : async (currentPage) => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/flights?page=${currentPage}`);
+      const response = await instanceAxios.get(`/flights?page=${currentPage}`);
       return response.data;
     } catch (error) {
       console.error("Error fetching flights", error);

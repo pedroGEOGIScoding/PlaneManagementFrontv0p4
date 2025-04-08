@@ -14,7 +14,7 @@ import CreateNewAirportForm from './Airports/CreateNewAirportForm.jsx';
 import UpdateAirportForm from './Airports/UpdateAirportForm.jsx';
 import DetailAirport from './Airports/DetailAirport.jsx';
 import About from './pages/About.jsx';
-
+import PaginatedAirports from './Airports/PaginatedAirports.jsx';
 import { Container } from '@mui/material';
 import { Routes, Route } from 'react-router-dom';
 
@@ -34,6 +34,7 @@ export default function App() {
           <Route path="/planes/detail/:id" element={<DetailPlane />} />
           <Route path="/planes/update/:id" element={<UpdatePlaneForm />} />
           <Route path="/airports/create" element={<CreateNewAirportForm />} />
+          <Route path="/airports/paginated" element={<PaginatedAirports />} />
           <Route path="/airports/detail/:id" element={<DetailAirport />} />
           <Route path="/airports/update/:id" element={<UpdateAirportForm />} />
           <Route path="/flights/create" element={<CreateNewFlightForm />} />
