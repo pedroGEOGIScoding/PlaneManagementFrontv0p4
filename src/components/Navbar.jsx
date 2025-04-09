@@ -3,6 +3,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { useState } from 'react';
 import { Home, Flight, Map, Info, ConnectingAirports, FlightLand } from "@mui/icons-material";
 
+
 const navLinks = [
   { title: 'Home', path: '/',icon: <Home/> },
   { title: 'Flights', path: '/flights',icon: <Flight/> },
@@ -51,26 +52,26 @@ export default function Navbar () {
           </IconButton>
 
           <Typography 
-            variant="h6"
-            sx = {{ flexGrow: 1}}
+            variant="h5"
+            sx = {{ flexGrow: 1, color: '#E08543'}}
             > Flight Management Tool
           </Typography>
 
           <Box sx={{ display: { xs: 'none', md: 'block' } }}>
                 {navLinks.map((item) => (
                   <Button
-                    color="inherit"
+                    color = "inherit"
+                    variant="text"
                     key={item.title}
                     component = "a"
                     href = {item.path}
                     >
-                    {item.title}
+                    <Typography sx={{ fontSize: '12px', color: '#E08543' }}>
+                      {item.title}
+                    </Typography>
                   </Button>
                 ))}
           </Box>
-
-
-
         </Toolbar>
 
       </AppBar>
