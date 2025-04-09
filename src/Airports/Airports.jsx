@@ -84,8 +84,11 @@ const Airports = () => {
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>
+                <TableCell>Code</TableCell>
                 <TableCell>City</TableCell>
                 <TableCell>Country</TableCell>
+                <TableCell>Latitude</TableCell>
+                <TableCell>Longitude</TableCell>
                 <TableCell>Elevation</TableCell>
                 <TableCell>Actions</TableCell>
               </TableRow>
@@ -94,8 +97,11 @@ const Airports = () => {
               {airports.map((airport) => (
                 <TableRow key={airport.id}>
                   <TableCell>{airport.airportName}</TableCell>
+                  <TableCell>{airport.airportCode}</TableCell>
                   <TableCell>{airport.airportCity}</TableCell>
                   <TableCell>{airport.airportCountry}</TableCell>
+                  <TableCell>{airport.airportLatitude}</TableCell>
+                  <TableCell>{airport.airportLongitude}</TableCell>
                   <TableCell>{airport.airportElevation}</TableCell>
                   <TableCell>
                     <Button variant="contained" onClick={() => detailAirport(airport)}>Detail</Button>

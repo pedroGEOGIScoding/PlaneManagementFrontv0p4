@@ -12,6 +12,16 @@ const airportService = {
     }
   },
 
+  getAirportById : async (id) => {
+    try {
+      const response = await instanceAxios.get(`/airports/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching airport by id", error);
+      throw error;
+    }
+  },
+
   createAirport : async (airport) => {
     try {
       const response = await instanceAxios.post(`/airports`, airport);
