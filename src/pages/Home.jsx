@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import HomeImage from '../assets/HomeImage.jpg'
+import planeLanding from '../assets/planeLanding.jpg'
 import { Box, Typography } from '@mui/material'
 
 
@@ -22,47 +22,47 @@ function Home() {
     }
   }, []);
   return (
-    <Box sx={{ position: 'relative', width: '100%', height: '100vh' }}>
+    <Box sx={{ position: 'relative', width: '100vw', height: '100vh' }}>
       <Box
         component="img"
-        src={HomeImage}
+        src={planeLanding}
         alt="Home"
         sx={{
           position: 'absolute',
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          opacity: 0.3,
+          width: '100vw',
+          height: '100vh',
+          objectFit: 'fill',
+          opacity: 0.5,
           zIndex: 1,
           minWidth: '100vw',
           minHeight: '100vh',
-          backgroundSize: 'cover',
+          backgroundSize: 'fill',
           backgroundPosition: 'center'
         }}
       />
-      <Box sx={{ 
-        position: 'relative',
-        top: '20%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        zIndex: 0
-      }}>
-        <Typography variant="h2" color="black" fontStyle="italic">
-          Flight Management Tool
-        </Typography>
-        <p></p>
-        <Typography variant="h4" color="light blue">
-          Track and manage flights in real-time
-        </Typography>
-        <Typography variant="h6" color="light blue">
-          {coordinates ? `Your current position is: ${coordinates.latitude.toFixed(2)}°, ${coordinates.longitude.toFixed(2)}°` : 'Loading coordinates...'}
-        </Typography>
-      </Box>
+        <Box sx={{ 
+          position: 'relative',
+          top: '20%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          height: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 0
+        }}>
+          <Typography variant="h2" color="black" fontStyle="italic">
+            Flight Management Tool
+          </Typography>
+          <p></p>
+          <Typography variant="h4" color="light blue">
+            Track and manage flights in real-time
+          </Typography>
+          <Typography variant="h6" color="light blue">
+            {coordinates ? `Your current position is: ${coordinates.latitude.toFixed(2)}°, ${coordinates.longitude.toFixed(2)}°` : 'Loading coordinates...'}
+          </Typography>
+        </Box>
     </Box>
   )
 }
