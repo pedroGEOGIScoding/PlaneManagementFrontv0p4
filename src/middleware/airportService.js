@@ -42,9 +42,9 @@ const airportService = {
     }
   },
 
-  getPaginatedAirports : async (currentPage, pageSize = 10) => {  
+  getPaginatedAirports : async (currentPage) => {  
     try {
-      const response = await instanceAxios.get(`/airports?page=${currentPage}`);
+      const response = await instanceAxios.get(`/airports/page/${currentPage}`);
       return response.data;
     } catch (error) {
       console.error("Error fetching airports", error);

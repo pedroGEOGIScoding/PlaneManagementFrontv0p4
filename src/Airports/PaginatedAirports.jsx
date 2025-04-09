@@ -21,6 +21,7 @@ const PaginatedAirports = () => {
   const [airports, setAirports] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -48,6 +49,7 @@ const PaginatedAirports = () => {
 
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
+    setPage(value);
   };
 
   const createAirport = () => {
@@ -78,7 +80,7 @@ const PaginatedAirports = () => {
     <Paper sx={{ p: 2, mt: 2 }}>
       <Stack spacing={2}>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
-          <Typography variant="h5" >
+          <Typography variant="h3" sx={{ flexGrow: 1, marginTop: 5 }}>
             Airports
           </Typography>
           <Button variant="contained" onClick={createAirport}>
@@ -135,14 +137,16 @@ const PaginatedAirports = () => {
             </Table>
           </TableContainer>
         )}
+        <Typography>Page: {page}</Typography>
         <Pagination
           count={totalPages}
           page={currentPage}
           onChange={handlePageChange}
-          color="primary"
+          color="secondary"
           variant="outlined"
           showFirstButton
           showLastButton
+          shape="rounded"
           size="small"
           sx={{ mt: 2 }}
         />

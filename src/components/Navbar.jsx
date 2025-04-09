@@ -1,15 +1,16 @@
 import { AppBar, Box, Button, Drawer, IconButton, Toolbar, Typography, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Divider } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import { Home, Flight, Map, Info, ConnectingAirports, FlightLand } from "@mui/icons-material";
 
 const navLinks = [
   { title: 'Home', path: '/',icon: <Home/> },
-  { title: 'Flights', path: '/Flights',icon: <Flight/> },
-  { title: 'Real-Time Flight Map', path: '/MapFlights',icon: <Map/> },
-  { title: 'Planes', path: '/Planes',icon: <ConnectingAirports/> },
-  { title: 'Airports', path: '/Airports',icon: <FlightLand/> },
-  { title: 'About us', path: '/About',icon: <Info/> }
+  { title: 'Flights', path: '/flights',icon: <Flight/> },
+  { title: 'Real-Time Flight Map', path: '/mapFlights',icon: <Map/> },
+  { title: 'Planes', path: '/planes',icon: <ConnectingAirports/> },
+  { title: 'Airports', path: '/airports',icon: <FlightLand/> },
+  { title: 'Paginated Airports', path: '/airports/paginated',icon: <FlightLand/> },
+  { title: 'About us', path: '/about',icon: <Info/> }
 ];
 
 export default function Navbar () {
