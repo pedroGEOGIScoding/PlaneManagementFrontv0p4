@@ -48,7 +48,7 @@ const DetailAirport = () => {
   };
 
   return (
-      <Box sx={{ display: 'flex', gap: 5, height: '100vh', width: '100vw', marginTop: 10}}> {/* Flex container for side-by-side layout */}
+      <Box sx={{ display: 'flex', gap: 5, height: '100vh', width: '100vw', marginTop: 20}}> {/* Flex container for side-by-side layout */}
         {/* Card Section */}
         <Card sx={{ width: '50%', mb: 50 }}> {/* Allow card to take up half of the space */}
           <CardContent>
