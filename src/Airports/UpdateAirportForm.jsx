@@ -12,13 +12,13 @@ const UpdateAirportForm = () => {
   const airport = location.state?.airport || {};
 
   const [formData, setFormData] = useState({
-    AirportName: '',
-    AirportCode: '',
-    AirportCity: '',
-    AirportCountry: '',
-    AirportLatitude: '',
-    AirportLongitude: '',
-    AirportElevation: '',
+    airportName: '',
+    airportCode: '',
+    airportCity: '',
+    airportCountry: '',
+    airportLatitude: '',
+    airportLongitude: '',
+    airportElevation: '',
   });
 
   const handleChange = (e) => {
@@ -44,8 +44,8 @@ const UpdateAirportForm = () => {
       <form onSubmit={handleSubmit}>
         <TextField
           label="Airport Name"
-          name="AirportName"
-          value={formData.AirportName}
+          name="airportName"
+          value={formData.airportName}
           onChange={handleChange}
           fullWidth
           margin="normal"
@@ -53,8 +53,8 @@ const UpdateAirportForm = () => {
         />
         <TextField
           label="Airport Code"
-          name="AirportCode"
-          value={formData.AirportCode}
+          name="airportCode"
+          value={formData.airportCode}
           onChange={handleChange}
           fullWidth
           margin="normal"
@@ -62,8 +62,8 @@ const UpdateAirportForm = () => {
         />
         <TextField
           label="Airport City"
-          name="AirportCity"
-          value={formData.AirportCity}
+          name="airportCity"
+          value={formData.airportCity}
           onChange={handleChange}
           fullWidth
           margin="normal"
@@ -71,8 +71,8 @@ const UpdateAirportForm = () => {
         />
         <TextField
           label="Airport Country"
-          name="AirportCountry"
-          value={formData.AirportCountry}
+          name="airportCountry"
+          value={formData.airportCountry}
           onChange={handleChange}
           fullWidth
           margin="normal"
@@ -80,9 +80,9 @@ const UpdateAirportForm = () => {
         />
         <TextField
           label="Airport Latitude"
-          name="AirportLatitude"
+          name="airportLatitude"
           type="number"
-          value={formData.AirportLatitude}
+          value={formData.airportLatitude}
           onChange={handleChange}
           fullWidth
           margin="normal"
@@ -90,9 +90,9 @@ const UpdateAirportForm = () => {
         />
         <TextField
           label="Airport Longitude"
-          name="AirportLongitude"
+          name="airportLongitude"
           type="number"
-          value={formData.AirportLongitude}
+          value={formData.airportLongitude}
           onChange={handleChange}
           fullWidth
           margin="normal"
@@ -100,9 +100,9 @@ const UpdateAirportForm = () => {
         />
         <TextField
           label="Airport Elevation"
-          name="AirportElevation"
+          name="airportElevation"
           type="number"
-          value={formData.AirportElevation}
+          value={formData.airportElevation}
           onChange={handleChange}
           fullWidth
           margin="normal"

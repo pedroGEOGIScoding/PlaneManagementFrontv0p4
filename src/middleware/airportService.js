@@ -1,10 +1,10 @@
-import instanceAxios from "./api";
+import axios from "./api.js";
 
 const airportService = {
 
   getAllAirports : async () => {
     try {
-      const response = await instanceAxios.get(`/airports`);
+      const response = await axios.get(`/airports`);
       return response.data;
     } catch (error) {
       console.error("Error fetching airports", error);
@@ -14,7 +14,7 @@ const airportService = {
 
   getAirportById : async (id) => {
     try {
-      const response = await instanceAxios.get(`/airports/${id}`);
+      const response = await axios.get(`/airports/${id}`);
       return response.data;
     } catch (error) {
       console.error("Error fetching airport by id", error);
@@ -24,7 +24,9 @@ const airportService = {
 
   createAirport : async (airport) => {
     try {
-      const response = await instanceAxios.post(`/airports`, airport);
+      console.log('Creating airport with data:', airport);
+      const response = await axios.post(`/airports`, airport);
+      console.log('Airport created successfully:', response.data);
       return response.data;
     } catch (error) {
       console.error("Error creating airport", error);
@@ -34,7 +36,7 @@ const airportService = {
 
   updateAirport : async (id, airport) => {
     try {
-      const response = await instanceAxios.put(`/airports/${id}`, airport);
+      const response = await axios.put(`/airports/${id}`, airport);
       return response.data;
     } catch (error) {
       console.error("Error updating airport", error);
@@ -44,7 +46,7 @@ const airportService = {
 
   deleteAirport : async (id) => {
     try {
-      const response = await instanceAxios.delete(`/airports/${id}`);
+      const response = await axios.delete(`/airports/${id}`);
       return response.data;
     } catch (error) {
       console.error("Error deleting airport", error);
@@ -54,7 +56,7 @@ const airportService = {
 
   getPaginatedAirports : async (currentPage) => {  
     try {
-      const response = await instanceAxios.get(`/airports/page/${currentPage}`);
+      const response = await axios.get(`/airports/page/${currentPage}`);
       return response.data;
     } catch (error) {
       console.error("Error fetching airports", error);
