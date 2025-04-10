@@ -64,7 +64,7 @@ const DetailFlight = () => {
         </CardContent>
         <CardActions>
           <Button variant="contained" onClick={handleBackClick}>
-            Back
+            Back to Flight List
           </Button>
         </CardActions>
       </Card>
