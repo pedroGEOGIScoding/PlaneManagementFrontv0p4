@@ -105,7 +105,7 @@ const CreateNewAirportForm = () => {
           required
         />
         <Button type="submit" variant="outlined" color="primary">
-          Create Airport
+          Create New Airport
         </Button>
       </form>
     </Paper>
